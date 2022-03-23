@@ -7,7 +7,7 @@ int arrayAddress(int row, int col, int ncol, int arr[][ncol]) {
 
     //return *(p + row + col * ncol);
 
-    return p + row + col * ncol;
+    return p + col + row * ncol;
 
 };
 
