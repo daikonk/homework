@@ -1,4 +1,4 @@
-# Author:	Your name
+# Author:	Nicholas Stoneking
 # Date:		July 11, 2021
 # Description:	Homework #3: Find 2D array content by row/col
 
