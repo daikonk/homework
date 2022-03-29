@@ -169,7 +169,7 @@ int main() {
             printGrid();
 
             printf("\n\n\nINPUT WASD TO MOVE: ");
-            scanf("%c", &userInput);
+            scanf("%c ", &userInput);
 
             move(grid, userInput, &player, &x , &y, keyVal);
             printf("\nPOS : %d %d", x, y);
