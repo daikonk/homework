@@ -1,4 +1,6 @@
 .data
+frameBuffer: 	.space 0x80000
+
 grid:
 	.ascii "# # # # # # # # # # # # # # # # # # # #\n"
 	.ascii "# 0         x               #         #\n"
@@ -20,7 +22,11 @@ grid:
 	.ascii "#   # # # # #   #       #   #   # # # #\n"
 	.ascii "#                   #       #         #\n"
 	.ascii "# # # # # # # # # # # # # # # # # # # #\n"
-	
+
+
+#test1:		.asciiz "LOOP2\n"
+#test2:		.asciiz "LOOP1\n"
+
 wasdToMove: 	.asciiz "\n\n\nINPUT WASD TO MOVE: "
 userPos: 	.asciiz "\nPOS : "
 keyInventory: 	.asciiz "\nKEYS IN INVENTORY : "
@@ -41,7 +47,7 @@ main:
 		beq $s1, 'q', exit	# test if userInput ($s1) is 'q'
 		beq $s2, 1, exit	# test if isWin ($s2) is true (1)
 		
-		#jal printGrid		# will replace bottom block of code to translate ascii -> bitmap
+		jal printGrid		# will replace bottom block of code to translate ascii -> bitmap
 		
 		la $a0, grid		# prints grid
 		li $v0, 4
@@ -215,11 +221,64 @@ Move:
 	addi $s7, $zero, 0
 	
 	jr $ra
+	
+printGrid:
+	la $t0, frameBuffer		# load frame buffer address
+	#li $t1, 0x20000			# save 512*256 pixels
+	la $t3, grid
+	li $t4, 8192
+	
+	#addi $t0, $t0, -700		# frameBuffer -36 for some reason
 
-# printGrid:
+	loop2:
+		li $t5, 20
+		loop1:
+			lb $a0, 0($t3)
+			bne $a0, '#', notWall
+			li $t2, 0x00d3d3d3
+			sw $t2, 0($t0)
+			notWall:
+			bne $a0, '0', notPlayer
+			li $t2, 0x00f44336
+			sw $t2, 0($t0)
+			notPlayer:
+			bne $a0, 'x', notXKey
+			li $t2, 0x0093c47d
+			sw $t2, 0($t0)
+			notXKey:
+			bne $a0, 'y', notYKey
+			li $t2, 0x008e7cc3
+			sw $t2, 0($t0)
+			notYKey:
+			bne $a0, 'X', notXDoor
+			li $t2, 0x0038761d
+			sw $t2, 0($t0)
+			notXDoor:
+			bne $a0, 'Y', notYDoor
+			li $t2, 0x00351c75
+			sw $t2, 0($t0)
+			notYDoor:
+			addi $t3, $t3, 2
+			addi $t0, $t0, 4
+			addi $t4, $t4, -1
+			addi $t5, $t5, -1
+			bnez $t5,  loop1
+			
+			#la $t6, test1
+			#li $v0, 4
+			#syscall
+			
+			
 	
-	# jr $ra
+	addi $t0, $t0, 48
+	bnez $t4, loop2
 	
+	#la $t6, test2
+	#li $v0, 4
+	#syscall
+	
+	jr $ra
+
 # generateMaze:
 
 	# jr $ra
