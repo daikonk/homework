@@ -41,6 +41,8 @@ main:
 		beq $s1, 'q', exit	# test if userInput ($s1) is 'q'
 		beq $s2, 1, exit	# test if isWin ($s2) is true (1)
 		
+		#jal printGrid		# will replace bottom block of code to translate ascii -> bitmap
+		
 		la $a0, grid		# prints grid
 		li $v0, 4
 		syscall
@@ -168,20 +170,20 @@ Move:
 	la $t8, keyVal
 	lw $s3, ($t8)
 	lw $s4, 4($t8)
-	bne $t6, 'x', xxSkip
+	bne $t6, 'x', xxSkip		# play sound for collect if conditionals true
 	sw $t9, ($t8)
 	j moveOn
 	xxSkip:
-	bne $t6, 'X', XSkip
+	bne $t6, 'X', XSkip		# play sound for unlock if conditionals true
 	bne $s3, 1, XSkip
 	sw $zero, ($t8)
 	j moveOn
 	XSkip:
-	bne $t6, 'y', yySkip
+	bne $t6, 'y', yySkip		# play sound for collect if conditionals true
 	sw $t9, 4($t8)
 	j moveOn
 	yySkip:
-	bne $t6, 'Y', YSkip
+	bne $t6, 'Y', YSkip		# play sound for unlock if conditionals true
 	bne $s4, 1, YSkip
 	sw $zero, 4($t8)
 	j moveOn
@@ -214,6 +216,13 @@ Move:
 	
 	jr $ra
 
+# printGrid:
+	
+	# jr $ra
+	
+# generateMaze:
+
+	# jr $ra
 
 exit:
 	
